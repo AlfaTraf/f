@@ -187,7 +187,7 @@
       display:grid;
       grid-template-columns: 1.1fr .9fr;
       gap:26px;
-      align-items:stretch;
+      align-items:center; /* FIX: визуально ровнее по вертикали */
     }
 
     .eyebrow{
@@ -225,18 +225,26 @@
     }
 
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+
+    /* FIX: микро-траст теперь ровной сеткой (без “обломанной” строки) */
     .microtrust{
       margin-top:18px;
-      display:flex; gap:10px; flex-wrap:wrap;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:10px;
       color: var(--muted2);
       font-size: 13px;
+      align-items:stretch;
     }
     .microtrust span{
-      display:inline-flex; align-items:center; gap:8px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       padding:8px 10px;
       border: 1px solid rgba(198,161,91,.16);
       border-radius:999px;
       background: rgba(18,18,26,.18);
+      width:100%;
     }
     .check{
       width:16px; height:16px; border-radius:6px;
@@ -247,6 +255,7 @@
       font-weight:900;
       font-size:12px;
       line-height:1;
+      flex: 0 0 auto;
     }
 
     /* Visual panel (Readable: Social -> Telegram) */
@@ -260,7 +269,7 @@
         linear-gradient(180deg, rgba(18,18,26,.42), rgba(18,18,26,.18));
       box-shadow: var(--shadow);
       overflow:hidden;
-      min-height: 380px;
+      min-height: 390px;
       isolation:isolate;
     }
     .visual:before{
@@ -337,7 +346,7 @@
     .social{
       position:absolute;
       left:18px;
-      top: 54%;
+      top: 50%;              /* FIX: строго по центру */
       transform: translateY(-50%);
       z-index:3;
       display:flex;
@@ -364,7 +373,7 @@
     .caption{
       position:absolute;
       left:18px;
-      top: 78%;
+      top: 74%;              /* FIX: подпись чуть выше, визуально ровнее */
       z-index:3;
       max-width: 58%;
       color: rgba(244,242,238,.62);
@@ -635,8 +644,9 @@
       .card, .step{ padding:16px; }
       section{ padding: 34px 0; }
       .sicon{ width:46px; height:46px; border-radius:16px; }
-      .social{ left:14px; top: 58%; }
-      .caption{ left:14px; top: 80%; max-width: 68%; }
+      .social{ left:14px; top: 52%; } /* чуть ниже на мобилке — выглядит ровнее */
+      .caption{ left:14px; top: 78%; max-width: 72%; }
+      .microtrust{ grid-template-columns: 1fr; } /* аккуратно в столбик */
     }
 
     /* Mobile drawer */
@@ -842,12 +852,12 @@
               </marker>
             </defs>
 
-            <!-- Paths start near social column and go to the Telegram bubble -->
-            <path d="M80,300 C220,285 290,270 420,250 C560,225 640,205 740,195 C800,190 850,185 900,175"
+            <!-- FIX: линии стартуют ближе к колонке и сходятся к телеграм-баблу (а не “в пустоту”) -->
+            <path d="M60,300 C210,285 300,270 430,250 C570,225 650,235 730,270 C780,292 805,330 820,360"
                   stroke="url(#goldStroke)" stroke-width="2.8" fill="none" marker-end="url(#arrow)"/>
-            <path d="M80,350 C220,340 300,330 420,305 C560,275 640,255 740,235 C800,225 850,220 900,212"
+            <path d="M60,350 C210,340 310,330 430,305 C570,275 660,285 740,315 C785,334 805,360 820,382"
                   stroke="rgba(198,161,91,.35)" stroke-width="1.7" fill="none" marker-end="url(#arrow)"/>
-            <path d="M80,400 C220,395 310,392 420,372 C560,335 650,310 740,280 C805,260 850,250 900,245"
+            <path d="M60,400 C210,395 320,392 430,372 C570,335 670,340 748,360 C790,372 808,392 820,404"
                   stroke="rgba(198,161,91,.28)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
           </svg>
 
