@@ -6,16 +6,13 @@
   <title>ALFATRAF — системный поток подписчиков в крипто-Telegram каналы</title>
   <meta name="description" content="ALFATRAF — системный поток подписчиков в крипто-Telegram каналы из соцсетей. Нажмите, чтобы перейти в Telegram и написать менеджеру." />
   <meta name="theme-color" content="#0A0A0C" />
-
   <style>
     :root{
       --bg:#0A0A0C;
       --bg2:#0F0F14;
-      --card:#12121A;
       --text:#F4F2EE;
       --muted:rgba(244,242,238,.72);
       --muted2:rgba(244,242,238,.55);
-      --line:rgba(198,161,91,.22);
       --gold:#C6A15B;
       --gold2:#F3D38A;
       --shadow: 0 24px 90px rgba(0,0,0,.62);
@@ -94,7 +91,6 @@
       display:block;
       filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));
     }
-    /* If image fails, we show a subtle "A" */
     .logo-fallback{
       font-weight: 900;
       color: rgba(255,255,255,.90);
@@ -146,7 +142,7 @@
       transition: .18s ease;
       box-shadow: 0 10px 40px rgba(0,0,0,.35);
       white-space:nowrap;
-      min-height: 44px; /* mobile tap */
+      min-height: 44px;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -253,7 +249,7 @@
       line-height:1;
     }
 
-    /* Visual panel */
+    /* Visual panel (NOW: clear scheme Social -> Telegram) */
     .visual{
       position:relative;
       border-radius: var(--radius);
@@ -265,7 +261,7 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       min-height: 380px;
-      isolation: isolate;
+      isolation:isolate;
     }
     .visual:before{
       content:"";
@@ -278,17 +274,19 @@
       transform: rotate(10deg);
       z-index:0;
     }
+
     .visual-inner{
       position:absolute; inset:0;
       padding:18px;
       display:flex;
       flex-direction:column;
-      justify-content:space-between;
+      justify-content:flex-start;
       z-index:2;
     }
     .visual-badge{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       flex-wrap:wrap;
+      z-index:3;
     }
     .pill{
       font-size:12px;
@@ -302,27 +300,21 @@
       white-space:nowrap;
     }
     .glowline{
+      margin-top:10px;
       height:1px;
       width:100%;
       background: linear-gradient(90deg, transparent, rgba(243,211,138,.45), transparent);
       opacity:.75;
+      z-index:3;
     }
 
     .flow{
       position:absolute;
       inset:-10%;
       pointer-events:none;
-      opacity:.92;
+      opacity:.95;
       z-index:1;
     }
-    .flow path{
-      stroke: rgba(243,211,138,.65);
-      stroke-width: 2.2;
-      fill:none;
-      filter: drop-shadow(0 0 8px rgba(243,211,138,.22));
-    }
-    .flow .thin{ stroke: rgba(198,161,91,.35); stroke-width: 1.2; }
-
     .tele{
       position:absolute;
       right:18px; bottom:18px;
@@ -335,10 +327,50 @@
         linear-gradient(180deg, rgba(198,161,91,.20), rgba(18,18,26,.18));
       border: 1px solid rgba(243,211,138,.30);
       box-shadow: 0 18px 70px rgba(0,0,0,.55), 0 0 0 10px rgba(198,161,91,.06);
-      z-index:3;
+      z-index:4;
     }
     .tele svg{ width:44px; height:44px; }
     .tele svg path{ fill: rgba(255,255,255,.92); }
+
+    /* Social icons inside visual */
+    .social{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      z-index:3;
+      flex-wrap:wrap;
+      max-width: 70%;
+    }
+    .sicon{
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      letter-spacing:.10em;
+      font-size:12px;
+      color: rgba(244,242,238,.86);
+      border: 1px solid rgba(243,211,138,.22);
+      background:
+        radial-gradient(70% 70% at 30% 20%, rgba(243,211,138,.18), transparent 60%),
+        rgba(10,10,12,.25);
+      box-shadow: 0 14px 44px rgba(0,0,0,.35);
+      user-select:none;
+    }
+    .caption{
+      position:absolute;
+      left:18px;
+      bottom:78px;
+      z-index:3;
+      max-width: 70%;
+      color: rgba(244,242,238,.62);
+      font-size:12px;
+      letter-spacing:.06em;
+    }
 
     /* Sections */
     section{ padding: 40px 0; }
@@ -595,13 +627,15 @@
       .lead{ font-size: 15px; }
       .hero-actions{ gap:10px; }
       .hero-actions .btn{ width:100%; }
-      .cta .btn-primary{ display:none; } /* top TG button hides on very small screens (we add sticky below) */
+      .cta .btn-primary{ display:none; }
       .grid-3, .grid-2{ grid-template-columns: 1fr; }
       .metric .value{ font-size: 32px; }
       .tele{ width:78px;height:78px; }
       .pill{ font-size:11px; }
       .card, .step{ padding:16px; }
       section{ padding: 34px 0; }
+      .sicon{ width:44px; height:44px; border-radius:14px; }
+      .caption{ bottom:74px; }
     }
 
     /* Mobile drawer */
@@ -672,7 +706,7 @@
 
     @media (max-width: 560px){
       .sticky-cta{ display:block; }
-      footer{ padding-bottom: calc(110px + var(--safeBottom)); } /* so footer isn't hidden */
+      footer{ padding-bottom: calc(110px + var(--safeBottom)); }
     }
 
     /* Subtle scroll reveal */
@@ -682,7 +716,6 @@
     }
     .reveal.show{ opacity:1; transform:none; }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       .reveal{ opacity:1; transform:none; }
       .btn, nav a{ transition:none; }
@@ -693,9 +726,9 @@
 </head>
 
 <body>
-  <!-- НАСТРОЙКИ -->
+  <!-- SETTINGS -->
   <script>
-    // 1) Вставь ссылку на менеджера/бота:
+    // 1) Вставь ссылку на менеджера/бота (обязательно):
     //    пример: https://t.me/alfatraf_manager
     window.ALFATRAF_TG = "https://t.me/your_manager_username";
 
@@ -794,20 +827,43 @@
           </div>
         </div>
 
+        <!-- VISUAL: now readable -->
         <div class="visual reveal" aria-hidden="true">
           <svg class="flow" viewBox="0 0 900 600" preserveAspectRatio="none">
-            <path d="M-20,520 C180,500 220,420 360,410 C500,400 560,340 760,300 C860,280 910,260 980,240" />
-            <path class="thin" d="M-30,560 C160,540 240,510 360,480 C520,430 600,380 760,340 C860,320 910,300 980,290" />
-            <path class="thin" d="M-40,470 C120,450 240,420 360,420 C520,420 620,330 760,280 C860,250 900,240 980,230" />
-            <path d="M-10,500 C180,470 260,450 380,420 C540,380 610,320 760,260 C860,220 900,210 980,200" />
+            <defs>
+              <linearGradient id="goldStroke" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="rgba(198,161,91,.10)"/>
+                <stop offset="0.45" stop-color="rgba(243,211,138,.55)"/>
+                <stop offset="1" stop-color="rgba(243,211,138,.75)"/>
+              </linearGradient>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 Z" fill="rgba(243,211,138,.75)"/>
+              </marker>
+            </defs>
+
+            <path d="M-10,420 C160,400 240,360 360,340 C520,305 610,255 760,205 C830,180 870,170 930,150"
+                  stroke="url(#goldStroke)" stroke-width="2.6" fill="none" marker-end="url(#arrow)"/>
+            <path d="M-20,470 C150,455 240,440 360,405 C520,350 610,300 760,245 C840,215 875,205 930,195"
+                  stroke="rgba(198,161,91,.35)" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+            <path d="M-30,520 C140,510 240,505 360,470 C520,405 610,350 760,295 C845,265 880,255 930,245"
+                  stroke="rgba(198,161,91,.28)" stroke-width="1.4" fill="none" marker-end="url(#arrow)"/>
           </svg>
 
           <div class="visual-inner">
             <div class="visual-badge">
-              <div class="pill">ALFATRAF system</div>
-              <div class="pill">Social → Telegram</div>
+              <div class="pill">ALFATRAF SYSTEM</div>
+              <div class="pill">SOCIAL → TELEGRAM</div>
             </div>
             <div class="glowline"></div>
+
+            <div class="caption">Поток трафика из соцсетей → подписка в Telegram</div>
+
+            <div class="social">
+              <div class="sicon">VK</div>
+              <div class="sicon">IG</div>
+              <div class="sicon">TT</div>
+              <div class="sicon">FB</div>
+            </div>
           </div>
 
           <div class="tele" title="Telegram">
@@ -857,10 +913,7 @@
         <div class="section-head reveal">
           <div>
             <h2>ALFATRAF создаёт систему роста</h2>
-            <p class="sub">
-              Строим инфраструктуру привлечения аудитории из соцсетей в Telegram:
-              воронка → прогрев → подписка → масштабирование.
-            </p>
+            <p class="sub">Строим инфраструктуру: воронка → прогрев → подписка → масштабирование.</p>
           </div>
           <a class="btn btn-primary reveal" data-tg href="#">Перейти в Telegram →</a>
         </div>
@@ -913,9 +966,7 @@
         <div class="section-head reveal">
           <div>
             <h2>Результаты</h2>
-            <p class="sub">
-              Ориентиры по экономике и объёму. Конкретные показатели зависят от ниши, бюджета и качества контента канала.
-            </p>
+            <p class="sub">Ориентиры по экономике и объёму. Показатели зависят от ниши, бюджета и качества контента.</p>
           </div>
         </div>
 
@@ -1002,7 +1053,7 @@
         <div class="section-head reveal">
           <div>
             <h2>Процесс работы</h2>
-            <p class="sub">Лаконично и системно: быстро запускаем, постоянно оптимизируем, масштабируем рабочее.</p>
+            <p class="sub">Лаконично и системно: быстро запускаем, оптимизируем, масштабируем рабочее.</p>
           </div>
           <a class="btn btn-primary reveal" data-tg href="#">Перейти в Telegram →</a>
         </div>
@@ -1064,42 +1115,23 @@
 
         <div class="reveal">
           <details>
-            <summary>
-              С какими бюджетами вы работаете?
-              <span class="chev">⌄</span>
-            </summary>
+            <summary>С какими бюджетами вы работаете? <span class="chev">⌄</span></summary>
             <p>Зависит от ниши и цели. В Telegram обсудим вводные и предложим стартовый бюджет для теста связок и оптимизации.</p>
           </details>
-
           <details>
-            <summary>
-              Откуда идёт трафик?
-              <span class="chev">⌄</span>
-            </summary>
+            <summary>Откуда идёт трафик? <span class="chev">⌄</span></summary>
             <p>Принцип: соцсети → воронка/прогрев → Telegram. Подберём источники под вашу аудиторию и формат контента.</p>
           </details>
-
           <details>
-            <summary>
-              Сколько времени занимает запуск?
-              <span class="chev">⌄</span>
-            </summary>
+            <summary>Сколько времени занимает запуск? <span class="chev">⌄</span></summary>
             <p>Обычно стартовая сборка и первые тесты занимают несколько дней. Дальше — оптимизация и масштабирование.</p>
           </details>
-
           <details>
-            <summary>
-              Есть ли гарантии по цифрам?
-              <span class="chev">⌄</span>
-            </summary>
-            <p>Гарантируем процесс: тесты, оптимизацию, прозрачную экономику и работу по системе. Конкретные цифры зависят от ниши, бюджета и качества канала.</p>
+            <summary>Есть ли гарантии по цифрам? <span class="chev">⌄</span></summary>
+            <p>Гарантируем процесс: тесты, оптимизацию, прозрачную экономику и работу по системе. Цифры зависят от ниши, бюджета и качества канала.</p>
           </details>
-
           <details>
-            <summary>
-              Что нужно от меня?
-              <span class="chev">⌄</span>
-            </summary>
+            <summary>Что нужно от меня? <span class="chev">⌄</span></summary>
             <p>Ссылка на канал, цель, вводные по контенту/монетизации и готовность быстро согласовывать креативы и связки.</p>
           </details>
         </div>
