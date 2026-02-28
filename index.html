@@ -2,10 +2,11 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>ALFATRAF — системный поток подписчиков в крипто-Telegram каналы</title>
   <meta name="description" content="ALFATRAF — системный поток подписчиков в крипто-Telegram каналы из соцсетей. Нажмите, чтобы перейти в Telegram и написать менеджеру." />
   <meta name="theme-color" content="#0A0A0C" />
+
   <style>
     :root{
       --bg:#0A0A0C;
@@ -21,6 +22,9 @@
       --radius:20px;
       --radius2:14px;
       --max:1120px;
+      --safeTop: env(safe-area-inset-top, 0px);
+      --safeBottom: env(safe-area-inset-bottom, 0px);
+      color-scheme: dark;
     }
 
     *{ box-sizing:border-box; }
@@ -28,11 +32,15 @@
     body{
       margin:0;
       color:var(--text);
-      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 70% 10%, rgba(198,161,91,.14), transparent 55%),
-                  radial-gradient(900px 700px at 10% 80%, rgba(198,161,91,.10), transparent 60%),
-                  linear-gradient(180deg, var(--bg), var(--bg2));
+      font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 800px at 70% 10%, rgba(198,161,91,.14), transparent 55%),
+        radial-gradient(900px 700px at 10% 80%, rgba(198,161,91,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       overflow-x:hidden;
+      padding-bottom: calc(0px + var(--safeBottom));
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -44,51 +52,82 @@
       top:0;
       z-index:50;
       backdrop-filter: blur(10px);
-      background: rgba(10,10,12,.55);
+      background: rgba(10,10,12,.62);
       border-bottom: 1px solid rgba(198,161,91,.16);
+      padding-top: var(--safeTop);
     }
     .topbar-inner{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
-      padding:14px 0;
+      gap:14px;
+      padding: 12px 0;
+      min-height: 64px;
     }
+
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
       letter-spacing:.06em;
+      min-width: 180px;
     }
-    .mark{
-      width:34px;height:34px;
+
+    /* Logo image placeholder */
+    .logo-wrap{
+      width:36px;height:36px;
       border-radius: 12px;
+      border: 1px solid rgba(243,211,138,.30);
       background:
-        radial-gradient(60% 60% at 30% 20%, rgba(243,211,138,.65), transparent 60%),
-        linear-gradient(135deg, rgba(198,161,91,.95), rgba(198,161,91,.15));
-      box-shadow: 0 10px 30px rgba(198,161,91,.18);
-      border: 1px solid rgba(243,211,138,.35);
+        radial-gradient(60% 60% at 30% 20%, rgba(243,211,138,.55), transparent 60%),
+        linear-gradient(135deg, rgba(198,161,91,.95), rgba(198,161,91,.14));
+      box-shadow: 0 10px 30px rgba(198,161,91,.16);
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      flex: 0 0 auto;
     }
-    .brand b{ font-weight:800; }
-    .brand span{ color:var(--muted2); font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+    .logo-wrap img{
+      width:100%;
+      height:100%;
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));
+    }
+    /* If image fails, we show a subtle "A" */
+    .logo-fallback{
+      font-weight: 900;
+      color: rgba(255,255,255,.90);
+      letter-spacing:.02em;
+      font-size: 16px;
+      opacity:.95;
+      user-select:none;
+    }
+
+    .brand b{ font-weight:800; letter-spacing:.04em; }
+    .brand small{
+      display:block;
+      color:var(--muted2);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-top:2px;
+    }
 
     nav{
-      display:flex; align-items:center; gap:18px;
+      display:flex; align-items:center; gap:12px;
     }
     nav a{
       color:var(--muted);
-      font-size:13px;
-      letter-spacing:.08em;
+      font-size:12px;
+      letter-spacing:.10em;
       text-transform:uppercase;
       padding:10px 10px;
       border-radius: 999px;
-      transition: .2s ease;
+      transition: .18s ease;
+      white-space:nowrap;
     }
     nav a:hover{ color:var(--text); background: rgba(198,161,91,.08); }
-
-    .cta{
-      display:flex; gap:10px; align-items:center;
-    }
 
     /* Buttons */
     .btn{
@@ -101,18 +140,20 @@
       border: 1px solid rgba(198,161,91,.32);
       background: rgba(18,18,26,.45);
       color: var(--text);
-      letter-spacing:.08em;
+      letter-spacing:.10em;
       text-transform:uppercase;
       font-size:12px;
       transition: .18s ease;
       box-shadow: 0 10px 40px rgba(0,0,0,.35);
       white-space:nowrap;
+      min-height: 44px; /* mobile tap */
     }
     .btn:hover{
       transform: translateY(-1px);
       border-color: rgba(243,211,138,.55);
       box-shadow: 0 16px 60px rgba(0,0,0,.5);
     }
+    .btn:active{ transform: translateY(0px) scale(.99); }
     .btn-primary{
       border-color: rgba(243,211,138,.45);
       background:
@@ -137,16 +178,20 @@
     }
     .btn-ghost:hover{ color:var(--text); }
 
+    .cta{
+      display:flex; gap:10px; align-items:center;
+    }
+
     /* Hero */
     .hero{
       position:relative;
-      padding: 66px 0 30px;
+      padding: 56px 0 26px;
     }
     .hero-grid{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:28px;
-      align-items:center;
+      grid-template-columns: 1.1fr .9fr;
+      gap:26px;
+      align-items:stretch;
     }
 
     .eyebrow{
@@ -174,19 +219,19 @@
       font-weight: 700;
       letter-spacing: .01em;
       line-height: 1.02;
-      font-size: clamp(36px, 4.2vw, 56px);
+      font-size: clamp(34px, 4.2vw, 56px);
     }
     .lead{
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 16px;
-      max-width: 56ch;
+      max-width: 62ch;
     }
 
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
     .microtrust{
       margin-top:18px;
-      display:flex; gap:14px; flex-wrap:wrap;
+      display:flex; gap:10px; flex-wrap:wrap;
       color: var(--muted2);
       font-size: 13px;
     }
@@ -220,6 +265,7 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       min-height: 380px;
+      isolation: isolate;
     }
     .visual:before{
       content:"";
@@ -230,16 +276,19 @@
       filter: blur(20px);
       opacity:.85;
       transform: rotate(10deg);
+      z-index:0;
     }
     .visual-inner{
       position:absolute; inset:0;
-      padding:22px;
+      padding:18px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
+      z-index:2;
     }
     .visual-badge{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
+      flex-wrap:wrap;
     }
     .pill{
       font-size:12px;
@@ -248,8 +297,9 @@
       padding:8px 10px;
       border-radius:999px;
       background: rgba(10,10,12,.25);
-      letter-spacing:.08em;
+      letter-spacing:.10em;
       text-transform:uppercase;
+      white-space:nowrap;
     }
     .glowline{
       height:1px;
@@ -257,13 +307,14 @@
       background: linear-gradient(90deg, transparent, rgba(243,211,138,.45), transparent);
       opacity:.75;
     }
+
     .flow{
       position:absolute;
       inset:-10%;
       pointer-events:none;
-      opacity:.9;
+      opacity:.92;
+      z-index:1;
     }
-    /* SVG flow styling */
     .flow path{
       stroke: rgba(243,211,138,.65);
       stroke-width: 2.2;
@@ -271,9 +322,10 @@
       filter: drop-shadow(0 0 8px rgba(243,211,138,.22));
     }
     .flow .thin{ stroke: rgba(198,161,91,.35); stroke-width: 1.2; }
+
     .tele{
       position:absolute;
-      right:22px; bottom:22px;
+      right:18px; bottom:18px;
       width:86px; height:86px;
       border-radius: 999px;
       display:grid; place-items:center;
@@ -283,18 +335,20 @@
         linear-gradient(180deg, rgba(198,161,91,.20), rgba(18,18,26,.18));
       border: 1px solid rgba(243,211,138,.30);
       box-shadow: 0 18px 70px rgba(0,0,0,.55), 0 0 0 10px rgba(198,161,91,.06);
+      z-index:3;
     }
     .tele svg{ width:44px; height:44px; }
     .tele svg path{ fill: rgba(255,255,255,.92); }
 
     /* Sections */
-    section{ padding: 42px 0; }
+    section{ padding: 40px 0; }
     .section-head{
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
       gap:18px;
       margin-bottom:18px;
+      flex-wrap:wrap;
     }
     h2{
       margin:0;
@@ -305,9 +359,9 @@
       font-size: clamp(24px, 2.5vw, 34px);
     }
     .sub{
-      margin:0;
+      margin:8px 0 0;
       color: var(--muted);
-      max-width: 62ch;
+      max-width: 70ch;
     }
 
     .grid-3{
@@ -328,6 +382,7 @@
       padding:18px;
       position:relative;
       overflow:hidden;
+      min-height: 120px;
     }
     .card:before{
       content:"";
@@ -381,17 +436,17 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      white-space:nowrap;
     }
     .metric .label{
       color: var(--muted);
-      font-size:13px;
-      letter-spacing:.06em;
+      font-size:12px;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      margin-top:6px;
+      margin-top:8px;
     }
 
     /* Steps */
-    .steps{ counter-reset: step; }
     .step{
       display:flex; gap:14px; align-items:flex-start;
       padding:16px;
@@ -400,6 +455,7 @@
       background: rgba(18,18,26,.22);
       position:relative;
       overflow:hidden;
+      min-height: 96px;
     }
     .step:before{
       content:"";
@@ -409,6 +465,7 @@
       opacity:.65;
       pointer-events:none;
     }
+    .step > *{ position:relative; }
     .step-num{
       width:36px; height:36px;
       border-radius: 14px;
@@ -425,7 +482,7 @@
 
     /* CTA block */
     .cta-block{
-      padding: 28px;
+      padding: 26px;
       border-radius: calc(var(--radius) + 6px);
       border: 1px solid rgba(243,211,138,.22);
       background:
@@ -454,6 +511,7 @@
     }
     .cta-row h2{ margin:0 0 6px; }
     .cta-row p{ margin:0; color:var(--muted); }
+    .small{ font-size:12px; color: var(--muted2); }
 
     /* FAQ */
     details{
@@ -495,7 +553,7 @@
 
     /* Footer */
     footer{
-      padding: 26px 0 46px;
+      padding: 26px 0 calc(46px + var(--safeBottom));
       color: var(--muted2);
       border-top: 1px solid rgba(198,161,91,.14);
       margin-top: 12px;
@@ -507,7 +565,6 @@
       gap:14px;
       flex-wrap:wrap;
     }
-    .small{ font-size:12px; }
 
     /* Mobile */
     .menu-btn{
@@ -517,19 +574,34 @@
       border: 1px solid rgba(198,161,91,.22);
       background: rgba(18,18,26,.30);
       color: var(--text);
-      letter-spacing:.08em;
+      letter-spacing:.10em;
       text-transform:uppercase;
       font-size:12px;
+      min-height: 44px;
     }
+
     @media (max-width: 980px){
-      .hero-grid{ grid-template-columns: 1fr; }
-      .visual{ min-height: 320px; }
       nav{ display:none; }
       .menu-btn{ display:inline-flex; }
+      .hero{ padding-top: 42px; }
+      .hero-grid{ grid-template-columns: 1fr; }
+      .visual{ min-height: 320px; }
+      .brand{ min-width: unset; }
     }
-    @media (max-width: 860px){
-      .grid-3{ grid-template-columns: 1fr; }
-      .grid-2{ grid-template-columns: 1fr; }
+
+    @media (max-width: 560px){
+      .container{ width: min(var(--max), 94vw); }
+      h1{ font-size: clamp(30px, 9vw, 40px); }
+      .lead{ font-size: 15px; }
+      .hero-actions{ gap:10px; }
+      .hero-actions .btn{ width:100%; }
+      .cta .btn-primary{ display:none; } /* top TG button hides on very small screens (we add sticky below) */
+      .grid-3, .grid-2{ grid-template-columns: 1fr; }
+      .metric .value{ font-size: 32px; }
+      .tele{ width:78px;height:78px; }
+      .pill{ font-size:11px; }
+      .card, .step{ padding:16px; }
+      section{ padding: 34px 0; }
     }
 
     /* Mobile drawer */
@@ -541,6 +613,7 @@
       display:none;
       z-index:60;
       padding: 16px;
+      padding-top: calc(16px + var(--safeTop));
     }
     .drawer.open{ display:block; }
     .drawer-card{
@@ -548,7 +621,7 @@
       margin: 0 auto;
       border-radius: calc(var(--radius) + 8px);
       border: 1px solid rgba(243,211,138,.22);
-      background: rgba(10,10,12,.72);
+      background: rgba(10,10,12,.76);
       box-shadow: var(--shadow);
       padding: 14px;
     }
@@ -557,12 +630,12 @@
       padding: 6px 6px 10px;
     }
     .close{
-      width:38px; height:38px;
+      width:42px; height:42px;
       border-radius: 14px;
       border: 1px solid rgba(198,161,91,.20);
       background: rgba(18,18,26,.30);
       color: var(--text);
-      font-size:18px;
+      font-size:20px;
       display:grid; place-items:center;
       cursor:pointer;
     }
@@ -574,12 +647,33 @@
       background: rgba(18,18,26,.18);
       margin: 10px 0;
       color: var(--muted);
-      letter-spacing:.08em;
+      letter-spacing:.10em;
       text-transform:uppercase;
       font-size:12px;
     }
     .drawer-links a:hover{ color:var(--text); border-color: rgba(243,211,138,.30); }
     .drawer-actions{ display:flex; gap:10px; flex-wrap:wrap; padding: 6px; }
+    .drawer-actions .btn{ width:100%; }
+
+    /* Sticky mobile CTA */
+    .sticky-cta{
+      position:fixed;
+      left:0; right:0;
+      bottom:0;
+      padding: 10px 12px;
+      padding-bottom: calc(10px + var(--safeBottom));
+      background: rgba(10,10,12,.72);
+      border-top: 1px solid rgba(198,161,91,.16);
+      backdrop-filter: blur(10px);
+      z-index:55;
+      display:none;
+    }
+    .sticky-cta .btn{ width:100%; }
+
+    @media (max-width: 560px){
+      .sticky-cta{ display:block; }
+      footer{ padding-bottom: calc(110px + var(--safeBottom)); } /* so footer isn't hidden */
+    }
 
     /* Subtle scroll reveal */
     .reveal{
@@ -587,24 +681,38 @@
       transition: .55s ease;
     }
     .reveal.show{ opacity:1; transform:none; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .reveal{ opacity:1; transform:none; }
+      .btn, nav a{ transition:none; }
+      .btn:hover{ transform:none; }
+      .btn-primary:before{ display:none; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- CHANGE THIS LINK -->
+  <!-- НАСТРОЙКИ -->
   <script>
-    // Вставь ссылку на твоего менеджера/бота:
-    // пример: https://t.me/alfatraf_manager
+    // 1) Вставь ссылку на менеджера/бота:
+    //    пример: https://t.me/alfatraf_manager
     window.ALFATRAF_TG = "https://t.me/your_manager_username";
+
+    // 2) Имя файла логотипа (положи рядом с index.html в репозитории)
+    window.ALFATRAF_LOGO = "crypto.png";
   </script>
 
   <header class="topbar">
     <div class="container topbar-inner">
       <a class="brand" href="#top" aria-label="ALFATRAF">
-        <span class="mark" aria-hidden="true"></span>
+        <span class="logo-wrap" aria-hidden="true">
+          <img id="logoImg" alt="ALFATRAF Logo" />
+          <span class="logo-fallback" id="logoFallback" style="display:none;">A</span>
+        </span>
         <div>
-          <b>ALFATRAF</b><br />
-          <span>Crypto Telegram growth</span>
+          <b>ALFATRAF</b>
+          <small>Crypto Telegram growth</small>
         </div>
       </a>
 
@@ -617,10 +725,8 @@
       </nav>
 
       <div class="cta">
-        <button class="menu-btn" id="menuBtn">Меню</button>
-        <a class="btn btn-primary" data-tg href="#">
-          Перейти в Telegram →
-        </a>
+        <button class="menu-btn" id="menuBtn" aria-label="Открыть меню">Меню</button>
+        <a class="btn btn-primary" data-tg href="#">Перейти в Telegram →</a>
       </div>
     </div>
   </header>
@@ -630,14 +736,18 @@
     <div class="drawer-card">
       <div class="drawer-top">
         <div class="brand">
-          <span class="mark" aria-hidden="true"></span>
+          <span class="logo-wrap" aria-hidden="true" style="width:34px;height:34px;">
+            <img id="logoImg2" alt="ALFATRAF Logo" />
+            <span class="logo-fallback" id="logoFallback2" style="display:none;">A</span>
+          </span>
           <div>
-            <b>ALFATRAF</b><br />
-            <span>Crypto Telegram growth</span>
+            <b>ALFATRAF</b>
+            <small>Crypto Telegram growth</small>
           </div>
         </div>
         <button class="close" id="closeDrawer" aria-label="Закрыть">×</button>
       </div>
+
       <div class="drawer-links">
         <a href="#how" class="drawerLink">Как работает</a>
         <a href="#results" class="drawerLink">Результаты</a>
@@ -645,11 +755,17 @@
         <a href="#process" class="drawerLink">Процесс</a>
         <a href="#faq" class="drawerLink">FAQ</a>
       </div>
+
       <div class="drawer-actions">
         <a class="btn btn-primary" data-tg href="#">Перейти в Telegram →</a>
         <a class="btn btn-ghost" href="#top" id="toTop">На верх</a>
       </div>
     </div>
+  </div>
+
+  <!-- Sticky CTA on mobile -->
+  <div class="sticky-cta">
+    <a class="btn btn-primary" data-tg href="#">Перейти в Telegram →</a>
   </div>
 
   <main id="top">
@@ -672,7 +788,7 @@
           </div>
 
           <div class="microtrust">
-            <span><span class="check">✓</span> Работаем только с крипто-нишой</span>
+            <span><span class="check">✓</span> Только крипто-ниша</span>
             <span><span class="check">✓</span> Система, а не разовые посты</span>
             <span><span class="check">✓</span> Фокус на цене подписчика</span>
           </div>
@@ -709,7 +825,7 @@
         <div class="section-head reveal">
           <div>
             <h2>Почему крипто-каналы не растут</h2>
-            <p class="sub">В большинстве случаев проблема не в бюджете — проблема в отсутствии системы притока.</p>
+            <p class="sub">Чаще всего проблема не в бюджете — проблема в отсутствии повторяемой системы притока.</p>
           </div>
         </div>
 
@@ -729,7 +845,7 @@
           <div class="card reveal">
             <p class="kicker">Боль #3</p>
             <h3>Зависимость от «удачных постов»</h3>
-            <p>Нет повторяемых связок — нет масштабирования. Всё держится на случайности.</p>
+            <p>Нет связок, которые масштабируются. Всё держится на случайности.</p>
           </div>
         </div>
       </div>
@@ -742,7 +858,7 @@
           <div>
             <h2>ALFATRAF создаёт систему роста</h2>
             <p class="sub">
-              Мы строим инфраструктуру привлечения аудитории из соцсетей в Telegram:
+              Строим инфраструктуру привлечения аудитории из соцсетей в Telegram:
               воронка → прогрев → подписка → масштабирование.
             </p>
           </div>
@@ -770,7 +886,7 @@
             <div class="step-num">1</div>
             <div>
               <h3>Анализ канала и ниши</h3>
-              <p>Аудит оффера, контента, воронки и точки роста для привлечения.</p>
+              <p>Аудит оффера, контента, воронки и точек роста.</p>
             </div>
           </div>
           <div class="step reveal">
@@ -784,22 +900,21 @@
             <div class="step-num">3</div>
             <div>
               <h3>Запуск и оптимизация</h3>
-              <p>Снижаем стоимость подписчика, усиливаем качество, масштабируем.</p>
+              <p>Снижаем стоимость подписчика, повышаем качество, масштабируем.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- RESULTS (NO CASES) -->
+    <!-- RESULTS -->
     <section id="results">
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <h2>Результаты пилотных запусков</h2>
+            <h2>Результаты</h2>
             <p class="sub">
-              Показатели зависят от ниши, бюджета и качества контента канала.
-              Ниже — ориентиры по экономике.
+              Ориентиры по экономике и объёму. Конкретные показатели зависят от ниши, бюджета и качества контента канала.
             </p>
           </div>
         </div>
@@ -843,6 +958,7 @@
             <div>
               <h2>Получите прогноз роста вашего канала</h2>
               <p>В Telegram уточним нишу и цель — и дадим план запуска + ориентиры по цене подписчика.</p>
+              <p class="small" style="margin-top:8px;">Нажмите кнопку и напишите менеджеру.</p>
             </div>
             <a class="btn btn-primary" data-tg href="#">Написать менеджеру →</a>
           </div>
@@ -886,7 +1002,7 @@
         <div class="section-head reveal">
           <div>
             <h2>Процесс работы</h2>
-            <p class="sub">Лаконично, без лишних созвонов: быстро запускаем и системно оптимизируем.</p>
+            <p class="sub">Лаконично и системно: быстро запускаем, постоянно оптимизируем, масштабируем рабочее.</p>
           </div>
           <a class="btn btn-primary reveal" data-tg href="#">Перейти в Telegram →</a>
         </div>
@@ -896,14 +1012,14 @@
             <div class="step-num">1</div>
             <div>
               <h3>Пишете менеджеру</h3>
-              <p>Скидываете ссылку на канал и цель (рост / монетизация / набор комьюнити).</p>
+              <p>Ссылка на канал + цель (рост / монетизация / набор комьюнити).</p>
             </div>
           </div>
           <div class="step reveal">
             <div class="step-num">2</div>
             <div>
               <h3>Получаете план</h3>
-              <p>Стратегия, воронка, подход к креативам, ориентиры по стоимости подписчика.</p>
+              <p>Стратегия, воронка, подход к креативам, ориентиры по CPL.</p>
             </div>
           </div>
           <div class="step reveal">
@@ -960,7 +1076,7 @@
               Откуда идёт трафик?
               <span class="chev">⌄</span>
             </summary>
-            <p>Основной принцип: соцсети → воронка/прогрев → Telegram. Подберём источники под вашу аудиторию и формат контента.</p>
+            <p>Принцип: соцсети → воронка/прогрев → Telegram. Подберём источники под вашу аудиторию и формат контента.</p>
           </details>
 
           <details>
@@ -968,7 +1084,7 @@
               Сколько времени занимает запуск?
               <span class="chev">⌄</span>
             </summary>
-            <p>Обычно стартовая сборка и тесты занимают несколько дней. Дальше — оптимизация и масштабирование в рабочем режиме.</p>
+            <p>Обычно стартовая сборка и первые тесты занимают несколько дней. Дальше — оптимизация и масштабирование.</p>
           </details>
 
           <details>
@@ -976,7 +1092,7 @@
               Есть ли гарантии по цифрам?
               <span class="chev">⌄</span>
             </summary>
-            <p>Мы гарантируем процесс: тесты, оптимизацию, прозрачную экономику и работу по системе. Конкретные цифры зависят от ниши, бюджета и качества канала.</p>
+            <p>Гарантируем процесс: тесты, оптимизацию, прозрачную экономику и работу по системе. Конкретные цифры зависят от ниши, бюджета и качества канала.</p>
           </details>
 
           <details>
@@ -984,7 +1100,7 @@
               Что нужно от меня?
               <span class="chev">⌄</span>
             </summary>
-            <p>Ссылка на канал, цель, вводные по контенту/монетизации и готовность быстро согласовывать креативы/связки.</p>
+            <p>Ссылка на канал, цель, вводные по контенту/монетизации и готовность быстро согласовывать креативы и связки.</p>
           </details>
         </div>
       </div>
@@ -998,7 +1114,7 @@
             <div>
               <h2>Telegram может расти по системе</h2>
               <p>ALFATRAF — премиальная инфраструктура притока подписчиков для крипто-каналов.</p>
-              <p class="small" style="margin-top:8px;color:var(--muted2);">Нажмите кнопку и напишите менеджеру в Telegram.</p>
+              <p class="small" style="margin-top:8px;">Нажмите кнопку и напишите менеджеру в Telegram.</p>
             </div>
             <a class="btn btn-primary" data-tg href="#">Перейти в Telegram →</a>
           </div>
@@ -1010,13 +1126,18 @@
   <footer>
     <div class="container footer-row">
       <div class="brand" aria-label="ALFATRAF footer">
-        <span class="mark" aria-hidden="true"></span>
+        <span class="logo-wrap" aria-hidden="true" style="width:34px;height:34px;">
+          <img id="logoImg3" alt="ALFATRAF Logo" />
+          <span class="logo-fallback" id="logoFallback3" style="display:none;">A</span>
+        </span>
         <div>
-          <b>ALFATRAF</b><br />
-          <span>Crypto Telegram growth</span>
+          <b>ALFATRAF</b>
+          <small>Crypto Telegram growth</small>
         </div>
       </div>
+
       <div class="small">© <span id="year"></span> ALFATRAF. Все права защищены.</div>
+
       <a class="btn btn-primary" data-tg href="#">Написать в Telegram →</a>
     </div>
   </footer>
@@ -1027,6 +1148,20 @@
 
     // Telegram links
     document.querySelectorAll("[data-tg]").forEach(a => a.setAttribute("href", window.ALFATRAF_TG));
+
+    // Logo handling: crypto.png
+    function bindLogo(imgId, fallbackId){
+      const img = document.getElementById(imgId);
+      const fb = document.getElementById(fallbackId);
+      if(!img || !fb) return;
+      img.src = window.ALFATRAF_LOGO;
+      img.loading = "lazy";
+      img.onerror = () => { img.style.display = "none"; fb.style.display = "inline"; };
+      img.onload  = () => { img.style.display = "block"; fb.style.display = "none"; };
+    }
+    bindLogo("logoImg", "logoFallback");
+    bindLogo("logoImg2", "logoFallback2");
+    bindLogo("logoImg3", "logoFallback3");
 
     // Drawer
     const drawer = document.getElementById("drawer");
@@ -1043,11 +1178,15 @@
     drawerLinks.forEach(l => l.addEventListener("click", hideDrawer));
 
     // Reveal on scroll
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => { if(en.isIntersecting) en.target.classList.add("show"); });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(!prefersReduced){
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => { if(en.isIntersecting) en.target.classList.add("show"); });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll(".reveal").forEach(el => el.classList.add("show"));
+    }
   </script>
 </body>
 </html>
