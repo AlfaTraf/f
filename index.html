@@ -249,7 +249,7 @@
       line-height:1;
     }
 
-    /* Visual panel (Readable: Social -> Telegram) */
+    /* Visual panel (без графика — чистая композиция) */
     .visual{
       position:relative;
       border-radius: var(--radius);
@@ -263,6 +263,8 @@
       min-height: 380px;
       isolation:isolate;
     }
+
+    /* мягкая “премиальная” фактура вместо линий */
     .visual:before{
       content:"";
       position:absolute; inset:-40%;
@@ -274,6 +276,23 @@
       transform: rotate(10deg);
       z-index:0;
     }
+    .visual:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(transparent, rgba(243,211,138,.03)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(243,211,138,.035) 0px,
+          rgba(243,211,138,.035) 1px,
+          transparent 1px,
+          transparent 26px
+        );
+      opacity:.35;
+      pointer-events:none;
+      z-index:1;
+      mix-blend-mode: screen;
+    }
 
     .visual-inner{
       position:absolute; inset:0;
@@ -281,7 +300,7 @@
       display:flex;
       flex-direction:column;
       justify-content:flex-start;
-      z-index:2;
+      z-index:3;
     }
     .visual-badge{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -308,21 +327,6 @@
       z-index:3;
     }
 
-    /* ======= FIXED DIAGRAM ======= */
-    .flow{
-      position:absolute;
-      inset:0;                 /* было -5%, из-за этого «плывёт» и выглядит грязно */
-      pointer-events:none;
-      z-index:1;
-      opacity:1;
-    }
-    .flow path{
-      fill:none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    /* ============================ */
-
     .tele{
       position:absolute;
       right:18px; bottom:18px;
@@ -340,13 +344,13 @@
     .tele svg{ width:44px; height:44px; }
     .tele svg path{ fill: rgba(255,255,255,.92); }
 
-    /* Social icons inside visual (LEFT column like in banners) */
+    /* Social icons inside visual (LEFT column) */
     .social{
       position:absolute;
       left:18px;
-      top: 54%;
+      top: 56%;
       transform: translateY(-50%);
-      z-index:3;
+      z-index:4;
       display:flex;
       flex-direction:column;
       gap:10px;
@@ -371,9 +375,9 @@
     .caption{
       position:absolute;
       left:18px;
-      top: 78%;
-      z-index:3;
-      max-width: 58%;
+      bottom: 18px;         /* было top:78% — теперь ровно и предсказуемо */
+      z-index:4;
+      max-width: 62%;
       color: rgba(244,242,238,.62);
       font-size:12px;
       letter-spacing:.06em;
@@ -643,10 +647,7 @@
       section{ padding: 34px 0; }
       .sicon{ width:46px; height:46px; border-radius:16px; }
       .social{ left:14px; top: 58%; }
-      .caption{ left:14px; top: 80%; max-width: 68%; }
-
-      /* На маленьких экранах чуть убираем шум: делаем линии тоньше/бледнее */
-      .flow{ opacity: .75; }
+      .caption{ left:14px; bottom: 14px; max-width: 72%; }
     }
 
     /* Mobile drawer */
@@ -838,50 +839,8 @@
           </div>
         </div>
 
-        <!-- VISUAL -->
+        <!-- VISUAL (без svg графика) -->
         <div class="visual reveal" aria-hidden="true">
-
-          <!-- ПЕРЕДЕЛАННАЯ ДИАГРАММА: 4 идеальные линии, мягкий glow, без стрелок -->
-          <svg class="flow" viewBox="0 0 900 600" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="goldStroke" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="rgba(243,211,138,.08)"/>
-                <stop offset="0.50" stop-color="rgba(243,211,138,.42)"/>
-                <stop offset="1" stop-color="rgba(243,211,138,.12)"/>
-              </linearGradient>
-
-              <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="2.2" result="b"/>
-                <feMerge>
-                  <feMergeNode in="b"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-
-              <!-- точка “входа” возле Telegram -->
-              <radialGradient id="sink" cx="50%" cy="50%" r="60%">
-                <stop offset="0" stop-color="rgba(243,211,138,.55)"/>
-                <stop offset="1" stop-color="rgba(243,211,138,0)"/>
-              </radialGradient>
-            </defs>
-
-            <!-- Логика координат:
-                 слева линия стартует около колонки иконок,
-                 справа сходится в одну точку (около Telegram круга) -->
-            <path d="M120,205 C300,190 450,195 600,215 C700,228 760,246 820,270"
-                  stroke="url(#goldStroke)" stroke-width="2.2" filter="url(#softGlow)" opacity=".95"/>
-            <path d="M120,275 C300,260 455,260 610,270 C705,276 765,286 820,294"
-                  stroke="rgba(243,211,138,.22)" stroke-width="2.0" filter="url(#softGlow)" opacity=".85"/>
-            <path d="M120,345 C300,345 455,330 610,315 C710,305 770,300 820,300"
-                  stroke="rgba(198,161,91,.22)" stroke-width="2.0" filter="url(#softGlow)" opacity=".78"/>
-            <path d="M120,415 C300,440 455,415 610,360 C710,335 770,320 820,310"
-                  stroke="rgba(198,161,91,.18)" stroke-width="2.0" filter="url(#softGlow)" opacity=".72"/>
-
-            <!-- точка схождения -->
-            <circle cx="820" cy="300" r="34" fill="url(#sink)" opacity=".85"/>
-            <circle cx="820" cy="300" r="4.2" fill="rgba(243,211,138,.65)"/>
-          </svg>
-
           <div class="visual-inner">
             <div class="visual-badge">
               <div class="pill">ALFATRAF SYSTEM</div>
