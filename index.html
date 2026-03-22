@@ -89,7 +89,6 @@
       min-width: 180px;
     }
 
-    /* Logo image placeholder */
     .logo-wrap{
       width:36px;height:36px;
       border-radius: 12px;
@@ -144,7 +143,6 @@
     }
     nav a:hover{ color:var(--text); background: rgba(198,161,91,.08); }
 
-    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -197,14 +195,13 @@
       display:flex; gap:10px; align-items:center;
     }
 
-    /* Hero */
     .hero{
       position:relative;
       padding: 56px 0 26px;
     }
     .hero-grid{
       display:grid;
-      grid-template-columns: 1fr; /* ГРАФИК УБРАН */
+      grid-template-columns: 1fr;
       gap:26px;
       align-items:stretch;
     }
@@ -268,7 +265,6 @@
       line-height:1;
     }
 
-    /* Sections */
     section{ padding: 40px 0; }
     .section-head{
       display:flex;
@@ -348,7 +344,6 @@
       font-size:14px;
     }
 
-    /* Metrics */
     .metric{
       display:flex;
       align-items:flex-end;
@@ -374,7 +369,6 @@
       margin-top:8px;
     }
 
-    /* Steps */
     .step{
       display:flex; gap:14px; align-items:flex-start;
       padding:16px;
@@ -408,7 +402,6 @@
     .step h3{ margin:0 0 4px; font-size:15px; }
     .step p{ margin:0; color:var(--muted); font-size:14px; }
 
-    /* CTA block */
     .cta-block{
       padding: 26px;
       border-radius: calc(var(--radius) + 6px);
@@ -441,7 +434,6 @@
     .cta-row p{ margin:0; color:var(--muted); }
     .small{ font-size:12px; color: var(--muted2); }
 
-    /* FAQ */
     details{
       border-radius: var(--radius2);
       border: 1px solid rgba(198,161,91,.16);
@@ -479,7 +471,6 @@
       max-width: 80ch;
     }
 
-    /* Footer */
     footer{
       padding: 26px 0 calc(46px + var(--safeBottom));
       color: var(--muted2);
@@ -494,7 +485,6 @@
       flex-wrap:wrap;
     }
 
-    /* Mobile */
     .menu-btn{
       display:none;
       padding:10px 12px;
@@ -529,7 +519,6 @@
       section{ padding: 34px 0; }
     }
 
-    /* Mobile drawer */
     .drawer{
       position:fixed;
       inset:0;
@@ -580,7 +569,6 @@
     .drawer-actions{ display:flex; gap:10px; flex-wrap:wrap; padding: 6px; }
     .drawer-actions .btn{ width:100%; }
 
-    /* Sticky mobile CTA */
     .sticky-cta{
       position:fixed;
       left:0; right:0;
@@ -600,7 +588,6 @@
       footer{ padding-bottom: calc(110px + var(--safeBottom)); }
     }
 
-    /* Subtle scroll reveal */
     .reveal{
       opacity:0; transform: translateY(10px);
       transition: .55s ease;
@@ -617,12 +604,8 @@
 </head>
 
 <body>
-  <!-- SETTINGS -->
   <script>
-    // Telegram (везде один и тот же)
     window.ALFATRAF_TG = "https://t.me/AlphaTraff_1";
-
-    // Имя файла логотипа (положи рядом с index.html)
     window.ALFATRAF_LOGO = "crypto.png";
   </script>
 
@@ -654,7 +637,6 @@
     </div>
   </header>
 
-  <!-- Mobile drawer -->
   <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Меню">
     <div class="drawer-card">
       <div class="drawer-top">
@@ -686,13 +668,11 @@
     </div>
   </div>
 
-  <!-- Sticky CTA on mobile -->
   <div class="sticky-cta">
     <a class="btn btn-primary" data-tg href="#">Перейти в Telegram →</a>
   </div>
 
   <main id="top">
-    <!-- HERO -->
     <section class="hero">
       <div class="container hero-grid">
         <div class="reveal">
@@ -716,12 +696,9 @@
             <span><span class="check">✓</span> Фокус на цене подписчика</span>
           </div>
         </div>
-
-        <!-- ГРАФИК ПОЛНОСТЬЮ УДАЛЁН -->
       </div>
     </section>
 
-    <!-- PROBLEM -->
     <section>
       <div class="container">
         <div class="section-head reveal">
@@ -753,7 +730,6 @@
       </div>
     </section>
 
-    <!-- SOLUTION -->
     <section id="how">
       <div class="container">
         <div class="section-head reveal">
@@ -806,7 +782,6 @@
       </div>
     </section>
 
-    <!-- RESULTS -->
     <section id="results">
       <div class="container">
         <div class="section-head reveal">
@@ -863,7 +838,6 @@
       </div>
     </section>
 
-    <!-- WHO -->
     <section id="who">
       <div class="container">
         <div class="section-head reveal">
@@ -893,7 +867,6 @@
       </div>
     </section>
 
-    <!-- PROCESS -->
     <section id="process">
       <div class="container">
         <div class="section-head reveal">
@@ -949,7 +922,6 @@
       </div>
     </section>
 
-    <!-- FAQ -->
     <section id="faq">
       <div class="container">
         <div class="section-head reveal">
@@ -984,7 +956,6 @@
       </div>
     </section>
 
-    <!-- FINAL CTA -->
     <section>
       <div class="container">
         <div class="cta-block reveal">
@@ -1021,13 +992,12 @@
   </footer>
 
   <script>
-    // Year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Telegram links (все кнопки ведут на @AlphaTraff_1)
-    document.querySelectorAll("[data-tg]").forEach(a => a.setAttribute("href", window.ALFATRAF_TG));
+    document.querySelectorAll("[data-tg]").forEach(a => {
+      a.setAttribute("href", window.ALFATRAF_TG);
+    });
 
-    // Logo handling: crypto.png
     function bindLogo(imgId, fallbackId){
       const img = document.getElementById(imgId);
       const fb = document.getElementById(fallbackId);
@@ -1041,7 +1011,6 @@
     bindLogo("logoImg2", "logoFallback2");
     bindLogo("logoImg3", "logoFallback3");
 
-    // Drawer
     const drawer = document.getElementById("drawer");
     const menuBtn = document.getElementById("menuBtn");
     const closeDrawer = document.getElementById("closeDrawer");
@@ -1055,7 +1024,6 @@
     drawer?.addEventListener("click", (e) => { if(e.target === drawer) hideDrawer(); });
     drawerLinks.forEach(l => l.addEventListener("click", hideDrawer));
 
-    // Reveal on scroll
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(!prefersReduced){
       const io = new IntersectionObserver((entries) => {
